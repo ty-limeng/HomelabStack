@@ -1,0 +1,86 @@
+services:
+  db:
+    container_name: nextcloud_database
+    image: mariadb:10.6
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    networks:
+      - nextcloud
+    volumes:
+      - /srv/dev-disk-by-uuid-c8eafbff-c7a3-4de7-b848-9c9d286256f7/Storage/nextcloud/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - TZ=Asia/Phnom_Penh
+      
+  redis:
+    image: redis:alpine
+    container_name: nextcloud_redis
+    restart: unless-stopped
+    volumes:
+      - nextcloud_redis:/data
+    networks:
+      - nextcloud
+
+  app:
+    container_name: nextcloud_app
+    image: nextcloud
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nextcloud
+    volumes:
+      - /srv/dev-disk-by-uuid-c8eafbff-c7a3-4de7-b848-9c9d286256f7/Storage/nextcloud/app:/var/www/html
+    environment:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+      - TZ=Asia/Phnom_Penh
+      - PHP_UPLOAD_LIMIT=10G
+      - PHP_POST_MAX_SIZE=10G
+      - PHP_MEMORY_LIMIT=2048M
+      
+  collabora:
+    image: collabora/code:24.04.12.3.1
+    #network_mode: "host"
+    ports:
+      - 9980:9980
+    container_name: collabora
+    # release notes: https://www.collaboraonline.com/release-notes/
+    networks:
+      - nextcloud
+    environment:
+      aliasgroup1: ${alias1} # Aliases must be separated by `|`
+      # aliasgroup2: ${alias2} # Remove this line if you don't have any other services using Collabora
+      DONT_GEN_SSL_CERT: "YES"
+      extra_params: |
+        --o:ssl.enable=false \
+        --o:ssl.ssl_verification=true \
+        --o:ssl.termination=true \
+        --o:welcome.enable=false
+      username: ${COLLABORA_USER}
+      password: ${COLLABORA_PASS}
+    cap_add:
+      - MKNOD
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: unless-stopped
+    command: ["bash", "-c", "coolconfig generate-proof-key ; /start-collabora-online.sh"]
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9980/hosting/discovery" ]
+      
+networks:
+  nextcloud:
+    external: true
+
+volumes:
+  nextcloud_redis:
+    external: true

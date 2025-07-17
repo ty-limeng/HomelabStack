@@ -1,0 +1,19 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    networks:
+      - proxy
+    volumes:
+      - vaultwarden:/data
+    restart: unless-stopped
+    environment:
+      WEBSOCKET_ENABLED: 'true'
+      TZ: Asia/Phnom_Penh
+networks:
+  proxy:
+    external: true
+
+volumes:
+  vaultwarden:
+    external: true

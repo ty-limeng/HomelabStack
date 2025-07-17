@@ -1,0 +1,16 @@
+services:
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto:latest
+    environment:
+      - TZ=Asia/Phnom_Penh
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - mosquitto:/mosquitto/config
+      - mosquitto:/mosquitto/data
+      - mosquitto:/mosquitto/log
+
+volumes:
+  mosquitto:
+    external: true

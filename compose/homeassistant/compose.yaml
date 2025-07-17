@@ -1,0 +1,21 @@
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - homeassistant:/config
+      #- /mnt/emmc/downloads:/media/music:ro
+    restart: unless-stopped
+    networks:
+      - proxy
+    ports:
+      - "8000:8123"
+    environment:
+      - TZ=Asia/Phnom_Penh
+      
+volumes:
+  homeassistant:
+    external: true
+networks:
+  proxy:
+    external: true

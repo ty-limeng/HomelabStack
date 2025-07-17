@@ -1,0 +1,17 @@
+services:
+  actual-server:
+    image: actualbudget/actual-server:latest
+    container_name: actual_budget
+    volumes:
+      - /mnt/emmc/budget/:/data
+    networks:
+      - proxy
+    ports:
+      - '2020:5006'
+    restart: unless-stopped
+    # pull_policy: always  # Uncomment only if your Compose version supports it
+    environment:
+      - TZ=Asia/Phnom_Penh
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,13 @@
+default:
+  options:
+    format: bestaudio/best
+    extract_audio: true
+    audio_format: mp3
+    audio_quality: 192  # (Optional: 0-320, default is 128)
+    postprocessors:
+      - key: FFmpegExtractAudio
+        preferredcodec: mp3
+        preferredquality: 192
+require_auth: true
+username: <USERNAME>
+password: <PASSOWRD>

@@ -1,0 +1,11 @@
+services:
+    tunnel:
+        container_name: cloudflared_tunnel
+        image: cloudflare/cloudflared:latest
+        restart: unless-stopped
+        network_mode: host
+        environment:
+         - TZ=Asia/Phnom_Penh
+        dns:
+         - 1.1.1.1
+        command: tunnel --no-autoupdate run --token <TUNNEL_TOKEN>
