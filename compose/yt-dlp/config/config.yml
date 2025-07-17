@@ -10,4 +10,4 @@ default:
         preferredquality: 192
 require_auth: true
 username: <USERNAME>
-password: <PASSOWRD>
+password: <PASSWORD>
