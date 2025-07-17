@@ -1,0 +1,16 @@
+# Bind mount env
+
+SERVICE_NAME="Actual Budget"
+SRC_DIR=<SRC_DIR_TO_SERVICE>
+DST_USR=<REMOTE_USER>
+IP=<REMOTE_IP>
+DST_DIR=<REMOTE_DIR>
+PORT=<SHH_PORT>
+---------------------------------------------------
+# Docker volume env
+SERVICE="Adguard"
+VOLUME_NAME="<DOCKER_VOLUME>"
+REMOTE_USER="<REMOTE_USER>"
+REMOTE_HOST="<REMOTE_IP>"
+REMOTE_DIR="<REMOTE_DIR>"
+BACKUP_NAME="${VOLUME_NAME}_backup_$(date +%F_%H-%M-%S).tar.gz"
