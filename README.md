@@ -3,7 +3,7 @@
 Welcome to **HomelabStack**, a personal collection of Docker Compose stacks and Bash scripts designed to simplify and secure your self-hosted services.
 
 This repository includes:
-- 🐳 Organized `docker-compose.yaml` files for each service
+- 🐳 Organized `compose.yaml` files for each service
 - 🛡️ Bash scripts for backing up Docker volumes and bind mounts
 - 🔔 Telegram alert integration
 
