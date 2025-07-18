@@ -17,17 +17,17 @@ All Docker services are organized under the `compose/` directory. Each folder co
 
 | Service         | Description                         |
 |-----------------|-------------------------------------|
-| actual-budget   | Budgeting software                  |
-| adguard         | Network-wide ad blocker             |
-| beszel          | Disk monitoring or internal agent   |
-| cloudflared     | Tunnels for public access           |
-| docmost         | Document management or viewer       |
-| homeassistant   | Home automation platform            |
-| immich          | Self-hosted photo and video backup  |
-| mqtt            | MQTT broker (e.g. Mosquitto)        |
-| nextcloud       | Self-hosted file storage            |
-| nginx-proxy     | Reverse proxy with SSL              |
-| vaultwarden     | Lightweight password manager        |
+| Actual-budget   | Budgeting software                  |
+| Adguard         | Layer 7 ad blocker                  |
+| Beszel          | Server monitoring solution          |
+| Cloudflared     | Tunnels for public access           |
+| Docmost         | Note taking app                     |
+| Homeassistant   | Smart home & IoT mangement          |
+| Immich          | Self-hosted photo and video backup  |
+| Mqtt            | MQTT broker (e.g. Mosquitto)        |
+| Nextcloud       | Self-hosted file storage & collabora|
+| Nginx-proxy     | Reverse proxy with SSL              |
+| Vaultwarden     | Lightweight password manager        |
 | yt-dlp          | YouTube/media downloader            |
 
 > 💡 Each service is configured in a way that prioritizes modularity and simplicity.
@@ -54,7 +54,6 @@ Backs up directories bind-mounted into containers (e.g., `/opt/data:/data`).
 
 Located in `bash/alert/telegram.sh`, this script allows integration with [Telegram Bot API](https://core.telegram.org/bots/api) for:
 - Notifying backup success/failure
-- Disk space alerts
 - Custom triggers
 
 ---
