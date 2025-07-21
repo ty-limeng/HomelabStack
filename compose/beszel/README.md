@@ -69,7 +69,7 @@ services:
     environment:
       LISTEN: /beszel_socket/beszel.sock
       KEY: "Public Key from Main Server Dashboard"
-# Leave his 'networks' comment is using custom or default docker network.
+# Leave this 'networks' comment is using custom or default docker network.
 #networks:
 #  proxy:
 #    external: true
