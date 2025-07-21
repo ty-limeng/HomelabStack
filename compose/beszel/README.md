@@ -78,7 +78,7 @@ services:
 ### Notes:
 
 - `LISTEN` is a Unix socket used for local communication between dashboard and agent.
-- `KEY` is needed only if you're using remote agents. Can be kept for uniformity.
+- `KEY` is needed for both main server and remote agents. 
 - `network_mode: host` allows full access to host’s network (needed for monitoring).
 
 ### Start the stack:
