@@ -39,8 +39,11 @@ services:
     networks:
       - docmost
     volumes:
-      - /mnt/emmc/docmost/docmost_redis:/data
+      - docmost_redis:/data
 
 networks:
   docmost:
+    external: true
+volumes:
+  docmost_redis:
     external: true
