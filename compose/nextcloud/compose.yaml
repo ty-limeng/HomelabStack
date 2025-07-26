@@ -7,7 +7,7 @@ services:
     networks:
       - nextcloud
     volumes:
-      - /srv/dev-disk-by-uuid-c8eafbff-c7a3-4de7-b848-9c9d286256f7/Storage/nextcloud/db:/var/lib/mysql
+      - ./storage/db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
@@ -36,7 +36,7 @@ services:
     networks:
       - nextcloud
     volumes:
-      - /srv/dev-disk-by-uuid-c8eafbff-c7a3-4de7-b848-9c9d286256f7/Storage/nextcloud/app:/var/www/html
+      - ./storage/app:/var/www/html
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -50,16 +50,14 @@ services:
       
   collabora:
     image: collabora/code:24.04.12.3.1
-    #network_mode: "host"
     ports:
       - 9980:9980
     container_name: collabora
-    # release notes: https://www.collaboraonline.com/release-notes/
     networks:
       - nextcloud
     environment:
-      aliasgroup1: ${alias1} # Aliases must be separated by `|`
-      # aliasgroup2: ${alias2} # Remove this line if you don't have any other services using Collabora
+      aliasgroup1: ${COLLABORA_ALIASES}
+      domain: ${NEXTCLOUD_DOMAIN}  
       DONT_GEN_SSL_CERT: "YES"
       extra_params: |
         --o:ssl.enable=false \
@@ -76,11 +74,30 @@ services:
     command: ["bash", "-c", "coolconfig generate-proof-key ; /start-collabora-online.sh"]
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9980/hosting/discovery" ]
-      
+
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    ports:
+      - "443:443"
+      - "81:81"
+    volumes:
+      - npm_data:/data
+      - npm_data:/etc/letsencrypt
+    environment:
+      - TZ=Asia/Phnom_Penh
+    restart: unless-stopped
+    networks:
+      - nextcloud
+    dns:
+      - 1.1.1.1
+
 networks:
   nextcloud:
     external: true
 
 volumes:
   nextcloud_redis:
+    external: true
+  npm_data:
     external: true
