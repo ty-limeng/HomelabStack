@@ -7,8 +7,8 @@ services:
     environment:
       - TZ=Asia/Phnom_Penh
     volumes:
-      - adguard_h1:/opt/adguardhome/work
-      - adguard_h1:/opt/adguardhome/conf
+      - adguard_data:/opt/adguardhome/work
+      - adguard_data:/opt/adguardhome/conf
 volumes:
-  adguard_h1:
+  adguard_data:
     external: true
