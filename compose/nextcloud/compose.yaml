@@ -50,8 +50,6 @@ services:
       
   collabora:
     image: collabora/code:24.04.12.3.1
-    ports:
-      - 9980:9980
     container_name: collabora
     networks:
       - nextcloud
