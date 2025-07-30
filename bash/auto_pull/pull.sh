@@ -3,9 +3,6 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 . "$SCRIPT_DIR/.env"
 source "$(dirname "$0")/telegram.sh"
 
-# Service Path
-#STACK_DIR="/opt/stacks"
-
 for STACK in "${STACK_DIR}"/*; do
   # Check directory for compose.yaml
   if [ -d "$STACK" ]; then
