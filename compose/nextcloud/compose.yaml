@@ -54,8 +54,8 @@ services:
     networks:
       - nextcloud
     environment:
-      aliasgroup1: ${COLLABORA_ALIASES}
-      domain: ${NEXTCLOUD_DOMAIN}  
+      aliasgroup1: ${COLLABORA_ALIASE2}|
+      aliasgroup2: ${COLLABORA_ALIASE2}
       DONT_GEN_SSL_CERT: "YES"
       extra_params: |
         --o:ssl.enable=false \
