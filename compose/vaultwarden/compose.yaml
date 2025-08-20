@@ -10,6 +10,8 @@ services:
     environment:
       WEBSOCKET_ENABLED: 'true'
       TZ: Asia/Phnom_Penh
+      SIGNUPS_ALLOWED: false
+      INVITATIONS_ALLOWED: false
 networks:
   proxy:
     external: true
