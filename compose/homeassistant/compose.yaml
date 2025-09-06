@@ -7,15 +7,16 @@ services:
       #- /mnt/emmc/downloads:/media/music:ro
     restart: unless-stopped
     networks:
-      - proxy
+      - ha_net
     ports:
       - "8000:8123"
     environment:
       - TZ=Asia/Phnom_Penh
-      
 volumes:
   homeassistant:
     external: true
+
 networks:
-  proxy:
-    external: true
+  ha_net:
+    name: ha_net
+    driver: bridge
