@@ -1,25 +1,33 @@
 services:
   docmost:
-    container_name: docmost
+    container_name: docmost-app
     image: docmost/docmost:latest
     depends_on:
       - db
       - redis
     environment:
-      APP_URL: 'http://localhost:3000'
+      APP_URL: '${APP_URL}'
       APP_SECRET: '${APP_SECRET}'
       DATABASE_URL: 'postgresql://docmost:${DOCMOST_URL}@db:5432/docmost?schema=public'
       REDIS_URL: 'redis://redis:6379'
       TZ: Asia/Phnom_Penh
+      MAIL_DRIVER: smtp
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 465
+      SMTP_SECURE: true
+      SMTP_USERNAME: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASS}
+      MAIL_FROM_ADDRESS: ${SMTP_USER}
+      MAIL_FROM_NAME: Docmost
     networks:
-      - docmost
+      - docmost_net
     ports:
       - "2010:3000"
     restart: unless-stopped
     volumes:
-      - /mnt/emmc/docmost/docmost:/app/data/storage
+      - /mnt/emmc/docmost/docmost:/app/data/storage:rw
   db:
-    container_name: docmost-postgres
+    container_name: docmost-db
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: docmost
@@ -28,22 +36,24 @@ services:
       TZ: Asia/Phnom_Penh
     restart: unless-stopped
     networks:
-      - docmost
+      - docmost_net
     volumes:
-      - /mnt/emmc/docmost/docmost_db:/var/lib/postgresql/data
+      - /mnt/emmc/docmost/docmost_db:/var/lib/postgresql/data:rw
 
   redis:
     container_name: docmost-redis
     image: redis:7.2-alpine
     restart: unless-stopped
     networks:
-      - docmost
+      - docmost_net
     volumes:
       - docmost_redis:/data
 
 networks:
-  docmost:
-    external: true
+  docmost_net:
+    name: docmost_net
+    driver: bridge
+
 volumes:
   docmost_redis:
     external: true
