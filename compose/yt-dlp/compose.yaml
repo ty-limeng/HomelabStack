@@ -1,7 +1,7 @@
 services:
   yt-dlp-webui:
-    image: marcobaobao/yt-dlp-webui:latest
-    #image: ghcr.io/marcopiovanello/yt-dlp-web-ui:latest
+    #image: marcobaobao/yt-dlp-webui
+    image: ghcr.io/marcopiovanello/yt-dlp-web-ui:latest
     container_name: yt-dlp
     environment:
       - YTDLP_EXTRA_OPTS=--extract-audio --audio-format mp3 --audio-quality 192
@@ -9,14 +9,15 @@ services:
     ports:
       - 8020:3033
     volumes:
-      - /mnt/emmc/downloads:/downloads # replace <your dir> with a directory on your host system
+      - /mnt/msata1/docker/dlp:/downloads:rw # replace <your dir> with a directory on your host system
       - ./config:/config    # directory where config.yml will be stored
     healthcheck:
       test: curl -f http://localhost:3033 || exit 1
     restart: unless-stopped
     networks:
-      - proxy
+      - nextcloud_net
 
 networks:
-  proxy:
-    external: true
+  nextcloud_net:
+    name: nextcloud_net
+    driver: bridge
