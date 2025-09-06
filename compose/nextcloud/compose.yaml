@@ -1,31 +1,31 @@
 services:
   db:
-    container_name: nextcloud_database
+    container_name: nextcloud-db
     image: mariadb:10.6
     restart: unless-stopped
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     networks:
-      - nextcloud
+      - nextcloud_net
     volumes:
-      - ./storage/db:/var/lib/mysql
+      - /mnt/msata1/docker/nextcloud/db:/var/lib/mysql:rw
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - TZ=Asia/Phnom_Penh
-      
+
   redis:
     image: redis:alpine
-    container_name: nextcloud_redis
+    container_name: nextcloud-redis
     restart: unless-stopped
     volumes:
       - nextcloud_redis:/data
     networks:
-      - nextcloud
+      - nextcloud_net
 
   app:
-    container_name: nextcloud_app
+    container_name: nextcloud-app
     image: nextcloud
     restart: unless-stopped
     ports:
@@ -34,9 +34,9 @@ services:
       - db
       - redis
     networks:
-      - nextcloud
+      - nextcloud_net
     volumes:
-      - ./storage/app:/var/www/html
+      - /mnt/msata1/docker/nextcloud/app:/var/www/html:rw
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -47,15 +47,14 @@ services:
       - PHP_UPLOAD_LIMIT=10G
       - PHP_POST_MAX_SIZE=10G
       - PHP_MEMORY_LIMIT=2048M
-      
+
   collabora:
     image: collabora/code:24.04.12.3.1
     container_name: collabora
     networks:
-      - nextcloud
+      - nextcloud_net
     environment:
-      aliasgroup1: ${COLLABORA_ALIASE2}|
-      aliasgroup2: ${COLLABORA_ALIASE2}
+      domain: ${NEXTCLOUD_DOMAIN}
       DONT_GEN_SSL_CERT: "YES"
       extra_params: |
         --o:ssl.enable=false \
@@ -75,7 +74,7 @@ services:
 
   nginx-proxy-manager:
     image: jc21/nginx-proxy-manager:latest
-    container_name: nginx-proxy-manager
+    container_name: npm
     ports:
       - "443:443"
       - "81:81"
@@ -86,13 +85,14 @@ services:
       - TZ=Asia/Phnom_Penh
     restart: unless-stopped
     networks:
-      - nextcloud
+      - nextcloud_net
     dns:
       - 1.1.1.1
-
+      
 networks:
-  nextcloud:
-    external: true
+  nextcloud_net:
+    name: nextcloud_net
+    driver: bridge
 
 volumes:
   nextcloud_redis:
