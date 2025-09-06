@@ -3,7 +3,7 @@ services:
     image: vaultwarden/server:latest
     container_name: vaultwarden
     networks:
-      - proxy
+      - npm_net
     volumes:
       - vaultwarden:/data
     restart: unless-stopped
@@ -12,10 +12,34 @@ services:
       TZ: Asia/Phnom_Penh
       SIGNUPS_ALLOWED: false
       INVITATIONS_ALLOWED: false
-networks:
-  proxy:
-    external: true
+      
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: npm
+    ports:
+      - "443:443"
+      - "81:81"
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    environment:
+      - TZ=Asia/Phnom_Penh
+    restart: unless-stopped
+    networks:
+      - npm_net
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
 
 volumes:
+  npm_data:
+    external: true
+  npm_letsencrypt:
+    external: true
   vaultwarden:
     external: true
+
+networks:
+  npm_net:
+    name: npm_net
+    driver: bridge
