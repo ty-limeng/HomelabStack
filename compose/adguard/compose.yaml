@@ -1,14 +1,18 @@
 services:
-  adguard-h1:
-    container_name: adguard-h1
-    image: adguard/adguardhome:latest
+  actual-server:
+    image: actualbudget/actual-server:latest
+    container_name: actual-budget
+    volumes:
+      - /mnt/emmc/budget/:/data:rw
+    networks:
+      - budget_net
+    ports:
+      - '2020:5006'
     restart: unless-stopped
-    network_mode: host
+    # pull_policy: always  # Uncomment only if your Compose version supports it
     environment:
       - TZ=Asia/Phnom_Penh
-    volumes:
-      - adguard_data:/opt/adguardhome/work
-      - adguard_data:/opt/adguardhome/conf
-volumes:
-  adguard_data:
-    external: true
+networks:
+  budget_net:
+    name: budget_net
+    driver: bridge
