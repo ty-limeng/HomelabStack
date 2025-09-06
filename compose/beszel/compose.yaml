@@ -6,10 +6,10 @@ services:
     ports:
       - 8010:8090
     volumes:
-      - ./beszel_hub/beszel_data:/beszel_data
-      - ./beszel_hub/beszel_socket:/beszel_socket
+      - ./beszel_hub/beszel_data:/beszel_data:rw
+      - ./beszel_hub/beszel_socket:/beszel_socket:rw
     networks:
-      - proxy
+      - npm_net
 
   beszel-agent:
     image: "henrygd/beszel-agent"
@@ -18,7 +18,7 @@ services:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./beszel_hub/beszel_socket:/beszel_socket
+      - ./beszel_hub/beszel_socket:/beszel_socket:rw
       # monitor other disks / partitions by mounting a folder in /extra-filesystems
       # - /mnt/disk/.beszel:/extra-filesystems/sda1:ro
     environment:
@@ -26,5 +26,6 @@ services:
       KEY: "<KEY_FROM_DASHBOARD>"
 
 networks:
-  proxy:
-    external: true
+  npm_net:
+    name: npm_net
+    driver: bridge
