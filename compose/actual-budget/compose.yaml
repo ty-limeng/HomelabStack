@@ -1,11 +1,11 @@
 services:
   actual-server:
     image: actualbudget/actual-server:latest
-    container_name: actual_budget
+    container_name: actual-budget
     volumes:
-      - /mnt/emmc/budget/:/data
+      - /mnt/emmc/budget/:/data:rw
     networks:
-      - proxy
+      - budget_net
     ports:
       - '2020:5006'
     restart: unless-stopped
@@ -13,5 +13,6 @@ services:
     environment:
       - TZ=Asia/Phnom_Penh
 networks:
-  proxy:
-    external: true
+  budget_net:
+    name: budget_net
+    driver: bridge
