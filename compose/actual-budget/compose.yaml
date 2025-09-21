@@ -5,7 +5,7 @@ services:
     volumes:
       - /mnt/emmc/budget/:/data:rw
     networks:
-      - budget_net
+      - budget-net
     ports:
       - '2020:5006'
     restart: unless-stopped
@@ -13,6 +13,6 @@ services:
     environment:
       - TZ=Asia/Phnom_Penh
 networks:
-  budget_net:
-    name: budget_net
+  budget-net:
+    name: budget-net
     driver: bridge
