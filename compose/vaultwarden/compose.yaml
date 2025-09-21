@@ -3,7 +3,7 @@ services:
     image: vaultwarden/server:latest
     container_name: vaultwarden
     networks:
-      - npm_net
+      - npm-net
     volumes:
       - vaultwarden:/data
     restart: unless-stopped
@@ -15,7 +15,7 @@ services:
       
   nginx-proxy-manager:
     image: jc21/nginx-proxy-manager:latest
-    container_name: npm
+    container_name: nginx-proxy-manager
     ports:
       - "443:443"
       - "81:81"
@@ -26,10 +26,9 @@ services:
       - TZ=Asia/Phnom_Penh
     restart: unless-stopped
     networks:
-      - npm_net
+      - npm-net
     dns:
       - 1.1.1.1
-      - 8.8.8.8
 
 volumes:
   npm_data:
@@ -40,6 +39,6 @@ volumes:
     external: true
 
 networks:
-  npm_net:
-    name: npm_net
+  npm-net:
+    name: npm-net
     driver: bridge
