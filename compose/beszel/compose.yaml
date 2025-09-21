@@ -9,7 +9,7 @@ services:
       - ./beszel_hub/beszel_data:/beszel_data:rw
       - ./beszel_hub/beszel_socket:/beszel_socket:rw
     networks:
-      - npm_net
+      - npm-net
 
   beszel-agent:
     image: "henrygd/beszel-agent"
@@ -26,6 +26,6 @@ services:
       KEY: "<KEY_FROM_DASHBOARD>"
 
 networks:
-  npm_net:
-    name: npm_net
+  npm-net:
+    name: npm-net
     driver: bridge
