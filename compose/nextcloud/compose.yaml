@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     networks:
-      - nextcloud_net
+      - nextcloud-net
     volumes:
       - /mnt/msata1/docker/nextcloud/db:/var/lib/mysql:rw
     environment:
@@ -19,10 +19,8 @@ services:
     image: redis:alpine
     container_name: nextcloud-redis
     restart: unless-stopped
-    volumes:
-      - nextcloud_redis:/data
     networks:
-      - nextcloud_net
+      - nextcloud-net
 
   app:
     container_name: nextcloud-app
@@ -34,9 +32,10 @@ services:
       - db
       - redis
     networks:
-      - nextcloud_net
+      - nextcloud-net
     volumes:
       - /mnt/msata1/docker/nextcloud/app:/var/www/html:rw
+      - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl:rw
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -49,26 +48,27 @@ services:
       - PHP_MEMORY_LIMIT=2048M
 
   collabora:
-    image: collabora/code:24.04.12.3.1
+    image: collabora/code:latest
     container_name: collabora
     networks:
-      - nextcloud_net
+      - nextcloud-net
+    ports:
+      - 2010:9980
     environment:
-      domain: ${NEXTCLOUD_DOMAIN}
-      DONT_GEN_SSL_CERT: "YES"
-      extra_params: |
-        --o:ssl.enable=false \
-        --o:ssl.ssl_verification=true \
-        --o:ssl.termination=true \
-        --o:welcome.enable=false
-      username: ${COLLABORA_USER}
-      password: ${COLLABORA_PASS}
+      - domain=${NEXTCLOUD_DOMAIN}
+      - DONT_GEN_SSL_CERT=true
+      # Admin Console Disable
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true --o:welcome.enable=false --o:admin_console.enable=false
+      # Admin Console Enable  
+      #- extra_params=--o:ssl.enable=false --o:ssl.termination=true --o:welcome.enable=false --o:admin_console.username=${COLLABORA_USER} --o:admin_console.password=${COLLABORA_PASS}
     cap_add:
       - MKNOD
     logging:
-      driver: ${LOG_DRIVER:-local}
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"  
     restart: unless-stopped
-    command: ["bash", "-c", "coolconfig generate-proof-key ; /start-collabora-online.sh"]
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9980/hosting/discovery" ]
 
@@ -85,17 +85,15 @@ services:
       - TZ=Asia/Phnom_Penh
     restart: unless-stopped
     networks:
-      - nextcloud_net
+      - nextcloud-net
     dns:
       - 1.1.1.1
       
 networks:
-  nextcloud_net:
-    name: nextcloud_net
+  nextcloud-net:
+    name: nextcloud-net
     driver: bridge
 
 volumes:
-  nextcloud_redis:
-    external: true
   npm_data:
     external: true
