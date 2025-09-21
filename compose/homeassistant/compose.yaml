@@ -7,7 +7,7 @@ services:
       #- /mnt/emmc/downloads:/media/music:ro
     restart: unless-stopped
     networks:
-      - ha_net
+      - ha-net
     ports:
       - "8000:8123"
     environment:
@@ -17,6 +17,6 @@ volumes:
     external: true
 
 networks:
-  ha_net:
-    name: ha_net
+  ha-net:
+    name: ha-net
     driver: bridge
