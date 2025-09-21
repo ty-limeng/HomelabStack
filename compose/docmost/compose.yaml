@@ -20,12 +20,12 @@ services:
       MAIL_FROM_ADDRESS: ${SMTP_USER}
       MAIL_FROM_NAME: Docmost
     networks:
-      - docmost_net
+      - docmost-net
     ports:
       - "2010:3000"
     restart: unless-stopped
     volumes:
-      - /mnt/emmc/docmost/docmost:/app/data/storage:rw
+      - /mnt/emmc/docmost/docmost_app:/app/data/storage:rw
   db:
     container_name: docmost-db
     image: postgres:16-alpine
@@ -36,7 +36,7 @@ services:
       TZ: Asia/Phnom_Penh
     restart: unless-stopped
     networks:
-      - docmost_net
+      - docmost-net
     volumes:
       - /mnt/emmc/docmost/docmost_db:/var/lib/postgresql/data:rw
 
@@ -45,15 +45,9 @@ services:
     image: redis:7.2-alpine
     restart: unless-stopped
     networks:
-      - docmost_net
-    volumes:
-      - docmost_redis:/data
+      - docmost-net
 
 networks:
-  docmost_net:
-    name: docmost_net
-    driver: bridge
-
-volumes:
-  docmost_redis:
-    external: true
+  docmost-net:
+    name: docmost-net
+    driver: bridge 
