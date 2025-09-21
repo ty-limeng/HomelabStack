@@ -15,9 +15,10 @@ services:
       test: curl -f http://localhost:3033 || exit 1
     restart: unless-stopped
     networks:
-      - nextcloud_net
+      - nextcloud-net
 
 networks:
-  nextcloud_net:
-    name: nextcloud_net
+  nextcloud-net:
+    name: nextcloud-net
     driver: bridge
+
