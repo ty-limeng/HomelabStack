@@ -35,7 +35,6 @@ services:
       - nextcloud-net
     volumes:
       - /mnt/msata1/docker/nextcloud/app:/var/www/html:rw
-      - /var/run/clamav/clamd.ctl:/var/run/clamav/clamd.ctl:rw
     environment:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
